@@ -95,3 +95,25 @@ def to_ccp_score(score_array) -> dict:
 #         doc = players_ref.document(matching_player.id)
 #         doc.update(player_dict)
 #         print(player_dict)
+
+
+def normalize_rating(utr):
+    """Normalize rating"""
+
+    normalized_utr = utr
+    if isinstance(utr, str):
+        if len(utr) == 0:
+            normalized_utr = 0.0
+        else:
+            normalized_utr = float(utr)
+    return normalized_utr
+
+
+def normalize_gender(gender: str):
+    """Normalize gender"""
+    normalized_gender = gender
+    if gender == "M":
+        normalized_gender = "Male"
+    elif gender == "F":
+        normalized_gender = "Female"
+    return normalized_gender

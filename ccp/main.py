@@ -12,14 +12,18 @@ import daiquiri
 import numpy as np
 import pandas as pd
 import pydash
+import requests
 from tabulate import tabulate
 from tsw import TSW
 from utr import UTR
 from utr.util import convert_to_utr_date, to_utr_score
 
 from ccp.database import get_database
+from ccp.members import get_ccp_utr_members, get_ccp_utr_members_from_file
 from ccp.settings import Settings
 from ccp.util import (
+    normalize_gender,
+    normalize_rating,
     read_dict_from_file,
     save_dict_to_file,
     to_ccp_score,
@@ -436,7 +440,10 @@ def database():
 
 
 @cli.command()
-@click.pass_context
+@click.option(
+    "--force/--no-force",
+    default=False,
+)
 @click.option(
     "-O",
     "--output-file",
@@ -466,37 +473,19 @@ def update_players(
     utr_club_id: int,
 ):
     """Update players function."""
-    cache_file = f"{utr_club_id}.pickle"
     additional_players = Settings().dict().get("additional_players")
     relevant_columns = Settings().dict().get("relevant_columns")
-
-    try:
-        members = read_dict_from_file(cache_file)
-    except Exception as err:
-        LOGGER.warning(
-            "Problem reading information from file, will try online... Error: %s",
-            err,
-        )
-        force = True
+    my_utr = UTR(utr_email, utr_password)
 
     if force:
-        my_utr = UTR(utr_email, utr_password)
-        my_utr.login()
-        club = my_utr.get_club(utr_club_id)
-        club_member_count = club.get("memberCount")
-        members = my_utr.get_club_members(utr_club_id, count=club_member_count)
-        for player_id in additional_players:
-            player = my_utr.get_player(player_id)
-            player_fields = list(player.keys())
-            for key in player_fields:
-                if key == "id":
-                    LOGGER.debug("Changing id to memberId for %s", player)
-                    player["playerId"] = player["id"]
-                if key not in relevant_columns:
-                    player.pop(key, None)
-            members.append(player)
-        LOGGER.debug("Got %s members", len(members))
-        save_dict_to_file(members, cache_file)
+        members = get_ccp_utr_members(my_utr, utr_club_id, additional_players)
+    else:
+        try:
+            members = get_ccp_utr_members_from_file(utr_club_id)
+        except Exception as err:
+            members = get_ccp_utr_members(
+                my_utr, utr_club_id, additional_players
+            )
 
     df = pd.json_normalize(members)
 
@@ -532,6 +521,58 @@ def update_players(
             tablefmt="psql",
         )
     )
+
+
+@cli.command()
+@click.option(
+    "--utr-club-id",
+    help="UTR Club ID to report results",
+    default=Settings().dict().get("utr_club_id"),
+)
+def update_web(utr_club_id: str):
+    """Update CCP Web Command"""
+    cache_file = f"{utr_club_id}.pickle"
+
+    members = get_ccp_utr_members_from_file(utr_club_id)
+
+    try:
+        for member in members:
+            player_id = member.get("playerId")
+            base_url = "http://localhost:8000/api/universaltennis/player/"
+            uri = f"{player_id}/"
+            url = f"{base_url}{uri}"
+            player_info = {
+                "id": player_id,
+                "location": member.get("location"),
+                "first_name": member.get("firstName"),
+                "last_name": member.get("lastName"),
+                "role": member.get("role", "Not Member"),
+                "display_name": member.get("displayName"),
+                "gender": normalize_gender(member.get("gender")),
+                "singles_utr": normalize_rating(member.get("singlesUtr")),
+                "rating_status_singles": member.get("ratingStatusSingles"),
+                "doubles_utr": normalize_rating(member.get("doublesUtr")),
+                "rating_status_doubles": member.get("ratingStatusDoubles"),
+                "my_utr_singles": normalize_rating(member.get("myUtrSingles")),
+                "my_utr_status_singles": member.get("myUtrStatusSingles"),
+                "my_utr_doubles": normalize_rating(member.get("myUtrDoubles")),
+                "my_utr_status_doubles": member.get("myUtrStatusDoubles"),
+                "my_utr_singles_reliability": member.get(
+                    "myUtrSinglesReliability"
+                ),
+                "my_utr_doubles_reliability": member.get(
+                    "myUtrDoublesReliability"
+                ),
+            }
+            response = requests.patch(url, json=player_info)
+            if response.status_code == 404:
+                response = requests.post(base_url, json=player_info)
+            response.raise_for_status()
+    except Exception as err:
+        LOGGER.error(
+            "Found the following problem while submitting player information. Error: %s",
+            err,
+        )
 
 
 @cli.command()

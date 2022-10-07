@@ -243,3 +243,10 @@ $RECYCLE.BIN/
 tenis-ccp-firebase-adminsdk-op28v-90788bdfdc.json
 *.pickle
 *.xlsx
+.gitsecret/keys/random_seed
+!*.secret
+ccpsite/ranking/fixtures/category.json
+ccpsite/ranking/fixtures/player.json
+ccpsite/universaltennis/fixtures/player.json
+ccpsite/results/fixtures/matchtype.json
+ccpsite/results/fixtures/source.json
