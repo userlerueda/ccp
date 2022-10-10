@@ -95,11 +95,13 @@ class Player(models.Model):
         blank=True,
         null=True,
     )
+    club_member_type_id = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+    )
 
-    club_member_role_id = None
     claimed = None
     initial_join_date = None
-    clubMemberTypeId = None
     isPower = None
     isPowered = None
     isPoweredByClub = None

@@ -47,3 +47,4 @@ fixtures: ## Create fixtures
 	cd ccpsite && python manage.py dumpdata results.matchtype --format=json > results/fixtures/matchtype.json
 	cd ccpsite && python manage.py dumpdata results.source --format=json > results/fixtures/source.json
 	cd ccpsite && python manage.py dumpdata universaltennis.player --format=json > universaltennis/fixtures/player.json
+	cd ccpsite && python manage.py dumpdata universaltennis.clubmembertype --format=json > universaltennis/fixtures/clubmembertype.json

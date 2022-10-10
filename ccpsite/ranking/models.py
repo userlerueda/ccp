@@ -8,10 +8,14 @@ from universaltennis.models import Player as UniversaltennisPlayer
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     rank = models.PositiveIntegerField(unique=True)
-    min_utr = models.DecimalField(max_digits=16, decimal_places=14)
-    max_utr = models.DecimalField(max_digits=16, decimal_places=14)
+    min_utr = models.DecimalField(
+        default=1.0, max_digits=16, decimal_places=14
+    )
+    max_utr = models.DecimalField(
+        default=16.5, max_digits=16, decimal_places=14
+    )
 
     def __str__(self):
         return self.name
@@ -30,9 +34,7 @@ class PlayerAlternateName(models.Model):
 
 class Player(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    alternate_names = models.ManyToManyField(
-        PlayerAlternateName, blank=True, null=True
-    )
+    alternate_names = models.ManyToManyField(PlayerAlternateName, blank=True)
     email = models.EmailField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     utr_player = models.ForeignKey(

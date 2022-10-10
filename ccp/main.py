@@ -563,6 +563,7 @@ def update_web(utr_club_id: str):
                 "my_utr_doubles_reliability": member.get(
                     "myUtrDoublesReliability"
                 ),
+                "club_member_type_id": member.get("clubMemberTypeId"),
             }
             response = requests.patch(url, json=player_info)
             if response.status_code == 404:
@@ -570,8 +571,9 @@ def update_web(utr_club_id: str):
             response.raise_for_status()
     except Exception as err:
         LOGGER.error(
-            "Found the following problem while submitting player information. Error: %s",
+            "Found the following problem while submitting player information. Error: %s. %s",
             err,
+            response.text,
         )
 
 
