@@ -1,0 +1,1 @@
+[{"model": "results.singlesresult", "pk": 1, "fields": {"source": 3, "has_been_uploaded_to_utr": false, "timestamp": "2022-02-20T19:00:00Z", "duration": null, "score": [[6, 0], [6, 0]], "winner": 3172183, "loser": 3530240}}]

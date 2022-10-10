@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "rest_framework",
+    "django_json_widget",
     "ranking.apps.RankingConfig",
     "results.apps.ResultsConfig",
     "universaltennis.apps.UniversaltennisConfig",
