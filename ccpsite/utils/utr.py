@@ -27,3 +27,85 @@ def get_display_rating(rating, status, reliability):
     """Convert rating, status and reliability to displayed rating"""
 
     ...
+
+
+def get_displayed_rating(players):
+    """Get the displayed rating for a player"""
+    if len(players) > 1:
+        return get_displayed_doubles_rating(players)
+    else:
+        return get_displayed_singles_rating(players)
+
+
+def get_displayed_singles_rating(player):
+    """Get the displayed singles rating for a player"""
+    ...
+
+
+def get_displayed_doubles_rating(players):
+    """Get the displayed doubles rating for a player"""
+    team_rating = calculate_team_rating(players)
+    team_names = []
+
+    for player in players:
+        display_name = player.display_name
+        rating = "0.00"
+        rating_progress_doubles = player.rating_progress_doubles
+        if rating_progress_doubles is None:
+            rating_progress_doubles = 0.0
+        my_utr_progress_doubles = player.my_utr_progress_doubles
+        if my_utr_progress_doubles is None:
+            my_utr_progress_doubles = round(
+                player.my_utr_doubles_reliability * 10, 0
+            )
+        doubles_utr = player.doubles_utr
+        my_utr_doubles = player.my_utr_doubles
+
+        if rating_progress_doubles == my_utr_progress_doubles:
+            rating_value = round(doubles_utr, 2)
+            rating = f"{rating_value} ✅ {rating_progress_doubles}%"
+        elif rating_progress_doubles > my_utr_progress_doubles:
+            rating_value = round(doubles_utr, 2)
+            rating = f"{rating_value} ✅ {rating_progress_doubles}%"
+        else:
+            rating_value = round(my_utr_doubles, 2)
+            rating = f"{rating_value} {my_utr_progress_doubles}%"
+        team_names.append(f"{display_name} ({rating})")
+
+    team_name = "/".join(team_names)
+
+    return f"{team_rating} - {team_name}"
+
+
+def calculate_team_rating(players):
+    """Get the displayed doubles rating for a team"""
+    team_rating = 0.0
+    team_count = 0
+
+    for player in players:
+        rating_value = 0.0
+
+        rating_progress_doubles = player.rating_progress_doubles
+        if rating_progress_doubles is None:
+            rating_progress_doubles = 0.0
+        my_utr_progress_doubles = player.my_utr_progress_doubles
+        if my_utr_progress_doubles is None:
+            my_utr_progress_doubles = round(
+                player.my_utr_doubles_reliability * 10, 0
+            )
+        doubles_utr = player.doubles_utr
+        my_utr_doubles = player.my_utr_doubles
+
+        if rating_progress_doubles == my_utr_progress_doubles:
+            rating_value = round(doubles_utr, 2)
+        elif rating_progress_doubles > my_utr_progress_doubles:
+            rating_value = round(doubles_utr, 2)
+        else:
+            rating_value = round(my_utr_doubles, 2)
+        if rating_value > 0:
+            team_count += 1
+            team_rating = team_rating + float(rating_value)
+
+            team_rating = round(team_rating / team_count, 2)
+
+    return team_rating

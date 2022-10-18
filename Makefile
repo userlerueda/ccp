@@ -48,3 +48,14 @@ fixtures: ## Create fixtures
 	cd ccpsite && python manage.py dumpdata results.source --format=json > results/fixtures/source.json
 	cd ccpsite && python manage.py dumpdata results.singlesresult --format=json > results/fixtures/singlesresult.json
 	cd ccpsite && python manage.py dumpdata universaltennis.player --format=json > universaltennis/fixtures/player.json
+	cd ccpsite && python manage.py dumpdata universaltennis.result --format=json > universaltennis/fixtures/result.json
+	cd ccpsite && python manage.py dumpdata universaltennis.division --format=json > universaltennis/fixtures/division.json
+	cd ccpsite && python manage.py dumpdata universaltennis.event --format=json > universaltennis/fixtures/event.json
+	cd ccpsite && python manage.py dumpdata universaltennis.team --format=json > universaltennis/fixtures/team.json
+	git secret hide
+
+.PHONY: add-fixtures
+add-fixtures: ## Add fixtures to secrets
+	@for app in ranking results tournamentsw universaltennis ; do \
+		git secret add ccpsite/$$app/fixtures/*.json || true; \
+	done 

@@ -250,3 +250,6 @@ ccpsite/ranking/fixtures/player.json
 ccpsite/universaltennis/fixtures/player.json
 ccpsite/results/fixtures/matchtype.json
 ccpsite/results/fixtures/source.json
+ccpsite/universaltennis/fixtures/result.json
+ccpsite/universaltennis/fixtures/event.json
+ccpsite/universaltennis/fixtures/division.json

@@ -2,9 +2,10 @@ __author__ = "Luis Rueda"
 __email__ = "userlerueda@gmail.com"
 __maintainer__ = "Luis Rueda <userlerueda@gmail.com>"
 
+import pydash
 from rest_framework import exceptions, serializers
 
-from .models import Player
+from .models import Division, Event, Player, Result
 
 
 class RoundingDecimalField(serializers.DecimalField):
@@ -18,7 +19,7 @@ class RoundingDecimalField(serializers.DecimalField):
         return value
 
 
-class PlayerSerializer(serializers.HyperlinkedModelSerializer):
+class PlayerSerializer(serializers.ModelSerializer):
     """Player records serializer"""
 
     id = serializers.IntegerField()
@@ -29,4 +30,25 @@ class PlayerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Player
+        fields = "__all__"
+
+
+class ResultSerializer(serializers.ModelSerializer):
+    """Result serializer"""
+
+    def to_internal_value(self, data):
+        for player in ["winner1", "winner2", "loser1", "loser2"]:
+            data[player] = pydash.objects.get(data, f"players.{player}.id")
+        return super().to_internal_value(data)
+
+    class Meta:
+        model = Result
+        fields = "__all__"
+
+
+class DivisionSerializer(serializers.ModelSerializer):
+    """Division serializer"""
+
+    class Meta:
+        model = Division
         fields = "__all__"

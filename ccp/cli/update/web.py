@@ -5,6 +5,9 @@ __email__ = "userlerueda@gmail.com"
 __maintainer__ = "Luis Rueda <userlerueda@gmail.com>"
 
 
+import sys
+from pprint import pprint
+
 import click
 import daiquiri
 import requests
@@ -30,6 +33,8 @@ def web(utr_club_id: str):
 
     try:
         for member in members:
+            pprint(member)
+            sys.exit(0)
             player_id = member.get("playerId")
             base_url = "http://localhost:8000/api/universaltennis/player/"
             uri = f"{player_id}/"
@@ -43,9 +48,11 @@ def web(utr_club_id: str):
                 "display_name": member.get("displayName"),
                 "gender": normalize_gender(member.get("gender")),
                 "singles_utr": normalize_rating(member.get("singlesUtr")),
+                "rating_progress_singles": member.get("ratingProgressSingles"),
                 "rating_status_singles": member.get("ratingStatusSingles"),
                 "doubles_utr": normalize_rating(member.get("doublesUtr")),
                 "rating_status_doubles": member.get("ratingStatusDoubles"),
+                "rating_progress_doubles": member.get("ratingProgressDoubles"),
                 "my_utr_singles": normalize_rating(member.get("myUtrSingles")),
                 "my_utr_status_singles": member.get("myUtrStatusSingles"),
                 "my_utr_doubles": normalize_rating(member.get("myUtrDoubles")),

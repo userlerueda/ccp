@@ -23,6 +23,7 @@ djangorestframework = "^3.14.0"
 Markdown = "^3.4.1"
 django-filter = "^22.1"
 django-json-widget = "^1.1.1"
+inflection = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.10.1"

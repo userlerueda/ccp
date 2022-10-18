@@ -31,8 +31,6 @@ class Settings(BaseSettings):
         3093914,
         3168654,
         3169402,
-        3169583,
-        3171206,
         3186200,
         3184704,
         3185169,
@@ -56,6 +54,8 @@ class Settings(BaseSettings):
         # "myUtrSinglesReliability",
         "myUtrDoubles",
         "myUtrStatusDoubles",
+        "ratingProgressSingles",
+        "ratingProgressDoubles",
         # "myUtrDoublesReliability",
     ]
     irrelevant_columns = [

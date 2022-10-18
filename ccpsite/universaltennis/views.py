@@ -6,8 +6,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from utils.utr import rating_and_status_to_display
 
-from .models import Player
-from .serializers import PlayerSerializer
+from .models import Division, Player, Result
+from .serializers import DivisionSerializer, PlayerSerializer, ResultSerializer
 
 
 class PlayerViewSet(viewsets.ModelViewSet):
@@ -15,6 +15,13 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+
+
+class ResultViewSet(viewsets.ModelViewSet):
+    """Result viewset"""
+
+    queryset = Result.objects.all()
+    serializer_class = ResultSerializer
 
 
 def index(request):
@@ -70,3 +77,10 @@ def index(request):
     }
     context = {"players": players}
     return render(request, "players/index.html", context)
+
+
+class DivisionViewSet(viewsets.ModelViewSet):
+    """Division viewset"""
+
+    queryset = Division.objects.all()
+    serializer_class = DivisionSerializer
