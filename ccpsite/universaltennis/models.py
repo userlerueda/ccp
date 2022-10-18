@@ -30,6 +30,16 @@ class Player(models.Model):
         max_length=200,
         null=True,
     )
+    email = models.CharField(
+        blank=True,
+        max_length=200,
+        null=True,
+    )
+    phone = models.CharField(
+        blank=True,
+        max_length=200,
+        null=True,
+    )
     role = models.CharField(
         blank=True,
         max_length=200,

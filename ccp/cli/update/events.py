@@ -68,6 +68,8 @@ def to_web(
             "firstName",
             "lastName",
             "gender",
+            "phone",
+            "email",
             "myUtrDoubles",
             "myUtrSingles",
             "nationality",
