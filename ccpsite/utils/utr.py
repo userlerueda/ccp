@@ -23,10 +23,38 @@ def rating_and_status_to_display(rating, status):
     return f"{rating} ({status})"
 
 
-def get_display_rating(rating, status, reliability):
+def get_display_rating(player):
     """Convert rating, status and reliability to displayed rating"""
 
-    ...
+    rating = "0.00"
+    rating_progress_singles = player.rating_progress_singles
+    if rating_progress_singles is None:
+        rating_progress_singles = 0.0
+    my_utr_progress_singles = player.my_utr_progress_singles
+    if my_utr_progress_singles is None:
+        if player.my_utr_singles_reliability is not None:
+            my_utr_progress_singles = round(
+                player.my_utr_singles_reliability * 10, 0
+            )
+        else:
+            my_utr_progress_singles = 0.0
+    singles_utr = player.singles_utr
+    my_utr_singles = player.my_utr_singles
+
+    if singles_utr == 0.0 and my_utr_singles == 0.0:
+        return f"{rating}"
+
+    if rating_progress_singles == my_utr_progress_singles:
+        rating_value = round(singles_utr, 2)
+        rating = f"{rating_value} ✅ {rating_progress_singles}%"
+    elif rating_progress_singles > my_utr_progress_singles:
+        rating_value = round(singles_utr, 2)
+        rating = f"{rating_value} ✅ {rating_progress_singles}%"
+    else:
+        rating_value = round(my_utr_singles, 2)
+        rating = f"{rating_value} {my_utr_progress_singles}%"
+
+    return f"{rating}"
 
 
 def get_displayed_rating(players):

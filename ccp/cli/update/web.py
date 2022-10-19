@@ -33,8 +33,6 @@ def web(utr_club_id: str):
 
     try:
         for member in members:
-            pprint(member)
-            sys.exit(0)
             player_id = member.get("playerId")
             base_url = "http://localhost:8000/api/universaltennis/player/"
             uri = f"{player_id}/"

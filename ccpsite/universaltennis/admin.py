@@ -5,7 +5,11 @@ __maintainer__ = "Luis Rueda <userlerueda@gmail.com>"
 from django.contrib import admin
 from django.db import models
 from django_json_widget.widgets import JSONEditorWidget
-from utils.utr import get_displayed_rating, rating_and_status_to_display
+from utils.utr import (
+    get_display_rating,
+    get_displayed_rating,
+    rating_and_status_to_display,
+)
 from utr.util import from_utr_club_results
 
 from .models import Division, Event, Player, Result, Team
@@ -17,20 +21,17 @@ class PlayerAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "display_name",
-        "get_singles_utr",
-        "get_my_utr_singles",
+        "get_best_singles_rating",
         "get_doubles_utr",
         "get_my_utr_doubles",
     )
     list_filter = ("location",)
     search_fields = ("id", "first_name", "last_name")
 
-    @admin.display(description="Verified Singles", ordering="singles_utr")
-    def get_singles_utr(self, obj):
+    @admin.display(description="Best Singles")
+    def get_best_singles_rating(self, obj):
 
-        return rating_and_status_to_display(
-            obj.singles_utr, obj.rating_status_singles
-        )
+        return get_display_rating(obj)
 
     @admin.display(description="MyUTR Singles", ordering="my_utr_singles")
     def get_my_utr_singles(self, obj):
@@ -134,8 +135,8 @@ class TeamAdmin(admin.ModelAdmin):
         "event",
     )
     list_editable = ("division", "event")
-    list_filter = ("event", "players", "division")
-    search_fields = ("id", "players", "event")
+    list_filter = ("event", "division", "players")
+    search_fields = ("id",)
     ordering = ("-team_rating",)
 
     @admin.display(description="players")
