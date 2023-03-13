@@ -16,28 +16,19 @@ class Settings(BaseSettings):
     utr_password: Optional[str]
     utr_club_id: int = 12610
     additional_players = [
-        75202,
-        1371091,
-        1477535,
         1710681,
         1965361,
         2607480,
         2734530,
-        2850671,
         2938046,
-        2938462,
         2942293,
         3093904,
         3093914,
         3168654,
         3169402,
-        3186200,
         3184704,
-        3185169,
         3193661,
         3302662,
-        3513515,
-        3558389,
     ]
     relevant_columns = [
         "playerId",
@@ -54,8 +45,10 @@ class Settings(BaseSettings):
         # "myUtrSinglesReliability",
         "myUtrDoubles",
         "myUtrStatusDoubles",
-        "ratingProgressSingles",
-        "ratingProgressDoubles",
+        "singlesUtrDisplay",
+        "doublesUtrDisplay",
+        # "ratingProgressSingles",
+        # "ratingProgressDoubles",
         # "myUtrDoublesReliability",
     ]
     irrelevant_columns = [

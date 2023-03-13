@@ -4,6 +4,7 @@ __author__ = "Luis Rueda"
 __email__ = "userlerueda@gmail.com"
 __maintainer__ = "Luis Rueda <userlerueda@gmail.com>"
 
+import json
 
 import click
 import daiquiri
@@ -16,6 +17,7 @@ from ccp.members import get_ccp_utr_members, get_ccp_utr_members_from_file
 from ccp.settings import Settings
 
 LOGGER = daiquiri.getLogger(__name__)
+SETTINGS = Settings()
 
 
 @click.command()
@@ -52,8 +54,8 @@ def players(
     utr_club_id: int,
 ):
     """Update players function."""
-    additional_players = Settings().dict().get("additional_players")
-    relevant_columns = Settings().dict().get("relevant_columns")
+    additional_players = SETTINGS.additional_players
+    relevant_columns = SETTINGS.relevant_columns
     my_utr = UTR(utr_email, utr_password)
 
     if force:
@@ -78,8 +80,6 @@ def players(
     df[float_columns] = df[float_columns].apply(pd.to_numeric)
     df = df.round(
         {
-            "singlesUtr": 3,
-            "doublesUtr": 3,
             "myUtrSingles": 3,
             "myUtrDoubles": 3,
         }
